@@ -1,32 +1,31 @@
-import dotenv from "dotenv";
-dotenv.config();
-import express from "express";
-import connectDB from "./src/db/index.js";
-import todosRoutes from "./src/routes/todoroutes.js";
-// import { edittodo } from "./src/controllers/todocontroller.js";
+import express from "express"
+import mongoos from "./src/Database/Index.js"
+import router from "./src/routes/userroute.js"
+import cors from "cors"
 
-const app = express();
-const port = 3000;
-
-app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-// routes
-app.use("/api/v1", todosRoutes);
+const port = 3000 
+const app = express()
 
 
+app.use(cors())
+app.use(express.json())
 
-
-connectDB()
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`⚙️  Server is running at port : ${port}`);
-    });
- 
-  })
+mongoos()
+  .then(() =>  console.log("DB connected")
+  
+  )
   .catch((err) => {
     console.log("MONGO DB connection failed !!! ", err);
   });
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.use("/api",router)
+
+
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
